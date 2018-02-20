@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>Admin order controller new variables</id>
+    <version>1.0.0</version>
+    <vqmver required="true">2.5.0</vqmver>
+    <author></author>
+    <file path="admin/controller/common/menu.php">
+      <operation>
+    <search><![CDATA[$data['openbay_markets'] = array(]]></search>
+      <add position="ibefore"><![CDATA[ 
+      $data['manifest'] = $this->url->link('omnivalt/omnivalt', 'token=' . $this->session->data['token'], 'SSL');
+      $data['settings'] = $this->url->link('shipping/omnivalt', 'token=' . $this->session->data['token'], 'SSL');
+      $this->load->language('shipping/omnivalt');
+      $data['menu_manifest']   = $this->language->get('menu_manifest');
+      $data['menu_settings']   = $this->language->get('menu_settings');
+      $data['menu_head']   = $this->language->get('menu_head');
+      ]]></add>
+    </operation>
+   </file>
+   <file path="admin/view/template/common/menu.tpl">
+      <operation>
+    <search><![CDATA[<li><a href="<?php echo $installer; ?>"><?php echo $text_installer; ?></a></li>]]></search>
+    <add position="iafter"><![CDATA[ 
+        <li><a class="parent"><?=$menu_head;?></a>
+            <ul>
+              <li><a href="<?=$manifest; ?>"><?=$menu_manifest;?></a></li>
+              <li><a href="<?= $settings; ?>"><?=$menu_settings;?></a></li>
+            </ul>
+        </li>
+    ]]></add>
+    </operation>
+  </file>
+</modification>
