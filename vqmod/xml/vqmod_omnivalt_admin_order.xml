@@ -21,7 +21,7 @@
             ]]></add>
         </operation>
     </file>
-            <file name="admin/model/sale/order.php">
+    <file name="admin/model/sale/order.php">
         <operation>
             <search position="iafter"><![CDATA[ $order_query->row['date_modified']]]></search>
             <add><![CDATA[

@@ -12,8 +12,6 @@ class ControllerModuleOmnivalt extends Controller {
 
         return 'succes';
     }
-
-    
     public function fetchUpdates() {
         
                 $terminals = array();
@@ -31,9 +29,9 @@ class ControllerModuleOmnivalt extends Controller {
          SET `value` = '" . $this->db->escape(serialize($terminals)) . "', serialized = '1' 
          WHERE `key` = '" . $this->db->escape($key) . "'");
          
-       }
+    }
         
-            private function fetchURL($url) {
+    private function fetchURL($url) {
         
                 $ch = curl_init(trim($url)) or die('cant create curl');
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -48,9 +46,9 @@ class ControllerModuleOmnivalt extends Controller {
         
                 curl_close($ch);
                 return $out;
-            }
+    }
         
-            private function parseCSV($csv, $countries = array()) {
+    private function parseCSV($csv, $countries = array()) {
         
                 $cabins = array();
                 if (empty($csv)) return $cabins;
@@ -61,7 +59,7 @@ class ControllerModuleOmnivalt extends Controller {
                 array_shift($rows);
         
                 foreach($rows as $row) {
-                    $cabin = str_getcsv($row, ';'); //parse the items in rows 
+                    $cabin = str_getcsv($row, ';');
                     # there are lines with all fields empty in estonian file, workaround
                     if ( count(array_filter($cabin)) ) { 
                         if ($newformat) {
@@ -77,10 +75,8 @@ class ControllerModuleOmnivalt extends Controller {
                     }
                 }
                 return $cabins;
-            }
-            
-          
-          private function addHttps($url){
+    }      
+    private function addHttps($url){
             if (empty($_SERVER['HTTPS'])) {
               return $url;
             } elseif ($_SERVER['HTTPS'] == "on") {
@@ -88,5 +84,5 @@ class ControllerModuleOmnivalt extends Controller {
             } else {
               return $url;
             }
-          }
     }
+}
