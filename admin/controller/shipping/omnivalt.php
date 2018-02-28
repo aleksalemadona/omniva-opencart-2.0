@@ -1063,14 +1063,14 @@ class ControllerShippingOmnivalt extends Controller
     }
     private function sendNotification($id_order = '', $tracking = '154233775CE')
     {
-        return;
+        return;//Uncomment to enable
         try {
             $order = $this->model_sale_order->getOrder($id_order);
     
             $subject = $this->config->get('config_name') . ' uzsakymo pasikeitimai' . $tracking;
             $message = $this->config->get('omnivalt_email_template');
             $mail = new Mail($this->config->get('config_mail'));
-            $mail->setTo('neriejus@gg.gg');
+	    $mail->setTo($order['email']);
             $mail->setFrom($this->config->get('config_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
