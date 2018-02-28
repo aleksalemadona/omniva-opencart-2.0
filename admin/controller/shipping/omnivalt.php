@@ -256,7 +256,7 @@ class ControllerShippingOmnivalt extends Controller
           } else {
               $data['omnivalt_enable_templates'] = $this->config->get('omnivalt_enable_templates');
           }
-          
+
         $this->response->setOutput($this->load->view('shipping/omnivalt.tpl', $data));
     }
 
@@ -1064,7 +1064,7 @@ class ControllerShippingOmnivalt extends Controller
             $this->db->query("INSERT INTO " . DB_PREFIX . "order_omniva (tracking, manifest, labels, id_order)
             VALUES ('$tracking','$manifest','$label','$id_order')");
             if ($this->config->get('omnivalt_enable_templates') == 'on') {
-                $this->sendNotification();
+                $this->sendNotification($id_order, $tracking);
             }
         };
     }
