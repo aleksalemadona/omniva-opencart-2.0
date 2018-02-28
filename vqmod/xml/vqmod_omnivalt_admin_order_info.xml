@@ -50,8 +50,8 @@
                         <select name="delivery_method" class="form-control input-sm">
                         <option disabled>Select labels count</option>
                         <option value="omnivalt.courier|OmnivaLt kurjeris">Omnivalt Courier</option>
-                                      <?php $parcel_terminals = '';
-                                            $grouped_options = array();
+                        <?php $parcel_terminals = '';
+                          $grouped_options = array();
                           foreach ($omniva_terminals as $terminal){
                             if (!isset($grouped_options[$terminal[1]]))
                               $grouped_options[(string)$terminal[1]] = array();

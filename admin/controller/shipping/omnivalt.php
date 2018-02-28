@@ -245,6 +245,18 @@ class ControllerShippingOmnivalt extends Controller
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+
+          if (isset($this->request->post['omnivalt_email_template'])) {
+            $data['omnivalt_email_template'] = $this->request->post['omnivalt_email_template'];
+          } else {
+              $data['omnivalt_email_template'] = $this->config->get('omnivalt_email_template');
+          }
+          if (isset($this->request->post['omnivalt_enable_templates'])) {
+              $data['omnivalt_enable_templates'] = $this->request->post['omnivalt_enable_templates'];
+          } else {
+              $data['omnivalt_enable_templates'] = $this->config->get('omnivalt_enable_templates');
+          }
+          
         $this->response->setOutput($this->load->view('shipping/omnivalt.tpl', $data));
     }
 
@@ -1051,7 +1063,30 @@ class ControllerShippingOmnivalt extends Controller
             $tracking = json_encode($tracking);
             $this->db->query("INSERT INTO " . DB_PREFIX . "order_omniva (tracking, manifest, labels, id_order)
             VALUES ('$tracking','$manifest','$label','$id_order')");
+            if ($this->config->get('omnivalt_enable_templates') == 'on') {
+                $this->sendNotification();
+            }
         };
+    }
+    private function sendNotification($id_order = '', $tracking = '154233775CE')
+    {
+        return;
+        try {
+            $order = $this->model_sale_order->getOrder($id_order);
+    
+            $subject = $this->config->get('config_name') . ' uzsakymo pasikeitimai' . $tracking;
+            $message = $this->config->get('omnivalt_email_template');
+            $mail = new Mail($this->config->get('config_mail'));
+            $mail->setTo('neriejus@gg.gg');
+            $mail->setFrom($this->config->get('config_email'));
+            $mail->setSender($this->config->get('config_name'));
+            $mail->setSubject($subject);
+            $mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
+            $mail->send();
+    
+        } catch (Exception $e) {
+            $this->log->write('Mail wasn\'t to this .nr. order' . $e);
+        }
     }
 
     private function readyStatus()

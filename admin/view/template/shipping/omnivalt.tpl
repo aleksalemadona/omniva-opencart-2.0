@@ -281,7 +281,26 @@
                     Nuoroda galima naudoti automatiniam omnivalt terminalų atnaujinimui naudojant local serverio crontab funkcijas. 
                     Arba jei tokios nėra - https://cron-job.org/en/ ir panašius servisus.
           </div>
-
+         <!-- Field for email templates -->
+            <div class="form-group">
+                    <label class="col-sm-2 control-label" for="terminals">Email templates <Br />
+                    Enabled/Disabled 
+                    <input 
+                    <?php if($omnivalt_enable_templates == 'on') print 'checked'; ?>
+                    type="checkbox"
+                    name="omnivalt_enable_templates">
+                    <Br />(Email will be sent then first label is generated.)
+                    </label>
+                    <div class="col-sm-10" id="terminals">
+                      <textarea 
+                      class="form-control" rows="5" 
+                      name="omnivalt_email_template"
+                      placeholder="Text to send then parcel is sent.">
+                      <?php echo $omnivalt_email_template;?>
+                      </textarea>
+                    </div>
+            </div>
+        <!--/ Field for email templates -->
         </form>
       </div>
     </div>
