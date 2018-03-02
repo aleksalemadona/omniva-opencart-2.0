@@ -82,7 +82,7 @@ class ControllerOmnivaltOmnivalt extends Controller
         $data['cancel'] = $this->url->link('common/dashboard', 'token=' . $this->session->data['token'] . '&type=shipping', true);
         $data['client'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'], true);
         $data['genLabels'] = $this->url->link('shipping/omnivalt/labels', 'token=' . $this->session->data['token'], true);
-        $data['labels'] = $this->url->link('omnivalt/printDocs', 'token=' . $this->session->data['token'], true);
+        $data['labels'] = $this->url->link('shipping/omnivalt/printDocs', 'token=' . $this->session->data['token'], true);
         $data['currentManifest'] = $this->config->get('omniva_manifest');
         $data['newManifest'] = 'Naujas Manifestas';
         $data['token'] = $this->session->data['token'];
