@@ -49,7 +49,7 @@
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-password"><?php echo $entry_password; ?></label>
             <div class="col-sm-10">
-              <input type="text" name="omnivalt_password" value="<?php echo $omnivalt_password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control" />
+              <input type="password" name="omnivalt_password" value="<?php echo $omnivalt_password; ?>" placeholder="<?php echo $entry_password; ?>" id="input-password" class="form-control" />
               <?php if ($error_password) { ?>
               <div class="text-danger"><?php echo $error_password; ?></div>
               <?php } ?>
@@ -147,6 +147,15 @@
               <?php } ?>
              </div>
           </div>
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-courier-price"><?php echo $entry_free_price; ?></label>
+            <div class="col-sm-10">
+              <input type="text" name="omnivalt_lt_free" value="<?php echo $omnivalt_lt_free; ?>" placeholder="<?php echo $entry_free_price; ?>" id="input-parcel-terminal-price" class="form-control" />
+              <?php if ($error_lt_free) { ?>
+              <div class="text-danger"><?php echo $error_lt_free; ?></div>
+              <?php } ?>
+             </div>
+          </div>
           <!-- additional pricing EE, LV -->
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-parcel-terminal-pricelv">LV <?php echo $entry_parcel_terminal_price; ?></label>
@@ -166,7 +175,15 @@
               <?php } ?>
              </div>
           </div>
-
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-courier-price">LV <?php echo $entry_free_price; ?></label>
+            <div class="col-sm-10">
+              <input type="text" name="omnivalt_lv_free" value="<?php echo $omnivalt_lv_free; ?>" placeholder="<?php echo $entry_free_price; ?>" id="input-parcel-terminal-price" class="form-control" />
+              <?php if ($error_lv_free) { ?>
+              <div class="text-danger"><?php echo $error_lv_free; ?></div>
+              <?php } ?>
+             </div>
+          </div>
           <div class="form-group required">
             <label class="col-sm-2 control-label" for="input-parcel-terminal-priceee">EE <?php echo $entry_parcel_terminal_price; ?></label>
             <div class="col-sm-10">
@@ -182,6 +199,15 @@
               <input type="text" name="omnivalt_courier_priceee" value="<?php echo $omnivalt_courier_priceee; ?>" placeholder="<?php echo $entry_courier_price; ?>" id="input-parcel-terminal-price" class="form-control" />
                <?php if ($error_courier_priceee) { ?>
               <div class="text-danger"><?php echo $error_courier_priceee; ?></div>
+              <?php } ?>
+             </div>
+          </div>
+          <div class="form-group required">
+            <label class="col-sm-2 control-label" for="input-courier-price">EE <?php echo $entry_free_price; ?></label>
+            <div class="col-sm-10">
+              <input type="text" name="omnivalt_ee_free" value="<?php echo $omnivalt_ee_free; ?>" placeholder="<?php echo $entry_free_price; ?>" id="input-parcel-terminal-price" class="form-control" />
+              <?php if ($error_ee_free) { ?>
+              <div class="text-danger"><?php echo $error_ee_free; ?></div>
               <?php } ?>
              </div>
           </div>
@@ -277,7 +303,7 @@
           <div class="form-group">
                     <label class="col-sm-2 control-label" for="terminals"><?=$cron_url;?></label>
                     <div class="col-sm-10" id="terminals">
-                    <a href="<?php print HTTPS_CATALOG; ?>index.php?route=extension/module/omnivalt"/><?php print HTTPS_CATALOG; ?>index.php?route=extension/module/omnivalt</a><br />
+                    <a href="<?php print HTTPS_CATALOG; ?>index.php?route=module/omnivalt"/><?php print HTTPS_CATALOG; ?>index.php?route=extension/module/omnivalt</a><br />
                     Nuoroda galima naudoti automatiniam omnivalt terminalų atnaujinimui naudojant local serverio crontab funkcijas. 
                     Arba jei tokios nėra - https://cron-job.org/en/ ir panašius servisus.
           </div>
