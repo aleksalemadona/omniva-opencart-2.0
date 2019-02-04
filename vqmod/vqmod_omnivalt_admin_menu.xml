@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+    <id>Admin order controller new variables</id>
+    <version>1.0.0</version>
+    <vqmver required="true">2.5.0</vqmver>
+    <author></author>
+    <!--
+    <file path="admin/controller/common/menu.php">
+      <operation>
+      <search><![CDATA[$data['openbay_markets'] = array(]]></search>
+        <add position="before"><![CDATA[ 
+        $data['manifest'] = $this->url->link('omnivalt/omnivalt', 'token=' . $this->session->data['token'], 'SSL');
+        $data['settings'] = $this->url->link('shipping/omnivalt', 'token=' . $this->session->data['token'], 'SSL');
+        ]]></add>
+      </operation>
+    </file>-->
+    
+    <file path="admin/view/template/common/menu.tpl">
+      <operation>
+        <search><![CDATA[<li><a href="<?php echo $installer; ?>"><?php echo $text_installer; ?></a></li>]]></search>
+          <add position="iafter"><![CDATA[ 
+          <?php $token = $_SESSION['token'];?>
+            <li><a class="parent">Omnivalt</a>
+              <ul>
+                <li><a href="https://www.pigubeakcijos.lt/admin/index.php?route=omnivalt/omnivalt&token=<?=$token; ?>">Manifestas</a></li>
+                <li><a href="https://www.pigubeakcijos.lt/admin/index.php?route=shipping/omnivalt&token=<?=$token;?>">Nustatymai</a></li>
+              </ul>
+            </li>
+          ]]></add>
+    </operation>
+  </file>
+
+
+</modification>
