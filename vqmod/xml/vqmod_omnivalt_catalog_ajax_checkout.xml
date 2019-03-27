@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<modification error="log">
+<modification>
     <id>Catalog checkout variables for map</id>
     <version>1.0.0</version>
     <vqmver required="true">2.5.0</vqmver>
@@ -7,7 +7,7 @@
         <file path="catalog/view/theme/*/template/d_quickcheckout/shipping_method.tpl" error="log">
     <operation error="log">>
         <search><![CDATA[<% _.each(shipping_method.quote, function(quote) { %>]]></search>
-        <add position="after"><![CDATA[kukuk
+        <add position="after"><![CDATA[
          <%   if (quote.code == 'fake.parcel_terminal' || quote.code == 'omnivalt.parcel_terminal') { %>
 	<% if (quote.code.substring(0, 15) == 'omnivalt.parcel'){return; alert(quote.code.substring(0, 15) );} %>
     

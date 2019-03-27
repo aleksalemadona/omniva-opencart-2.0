@@ -8,6 +8,11 @@ class ControllerOmnivaltOmnivalt extends Controller
 {
     public function index() 
     {
+        /*
+        $addColumns =" ALTER TABLE ".DB_PREFIX."order ADD `omnivaWeight` INT NOT NULL DEFAULT '1',
+        ADD `cod_amount` INT DEFAULT 0;";
+       $this->db->query($addColumns);
+       */
         $this->load->language('shipping/omnivalt');
         $manifest = intval($this->config->get('omniva_manifest'));
         $data['heading_title'] = $this->language->get('heading_title');
@@ -29,6 +34,7 @@ class ControllerOmnivaltOmnivalt extends Controller
             $start = ($page - 1) * 70;
             $limit = 70;
          
+
         $pagination = new Pagination();
         $pagination->total = $numRows;
         $pagination->page = $page;
@@ -57,7 +63,11 @@ class ControllerOmnivaltOmnivalt extends Controller
                     ORDER BY order_id DESC
                     ;");
         $data['newOrders'] = $newOrders->rows;
+        /*if($page > 1) 
+        $data['newOrders'] = null;
+        */
         $data['newPage'] = $newOrders->rows;
+        //if($page > 1) 
         $data['newPage'] = null;
         $data['skipped'] = $skipped->rows;
         $data['header'] = $this->load->controller('common/header');
@@ -113,12 +123,27 @@ class ControllerOmnivaltOmnivalt extends Controller
         $data['text_courier'] = $this->language->get('text_courier');
         $data['generate_label'] = $this->language->get('generate_label');
 
+        $data['text_courier_call'] = $this->language->get('text_courier_call');
+        $data['text_omniva_important'] = $this->language->get('text_omniva_important');
+        $data['text_latest_courier_call'] = $this->language->get('text_latest_courier_call');
+        $data['text_eshop_settings'] = $this->language->get('text_eshop_settings');
+        $data['text_eshop_settings_p'] = $this->language->get('text_eshop_settings_p');
+        $data['text_omniva_data_send'] = $this->language->get('text_omniva_data_send');
+        $data['entry_sender_name'] = $this->language->get('entry_sender_name');
+        $data['entry_sender_phone'] = $this->language->get('entry_sender_phone');
+        $data['entry_sender_address'] = $this->language->get('entry_sender_address');
+        $data['entry_sender_postcode'] = $this->language->get('entry_sender_postcode');
+        $data['button_save'] = $this->language->get('button_save');
+
         $this->response->setOutput($this->load->view('omnivalt/omnivalt.tpl', $data));
 
     }
     
     public function searchOmnivaOrders()
-    {
+    {/*
+        $this->request->post['tracking_nr'] = null;
+        $this->request->post['customer'] = null ;
+        $this->request->post['date_added'] = '02/06/2018';*/
      if (!isset($this->request->post['date_added']) AND !isset($this->request->post['customer']) AND !isset($this->request->post['tracking_nr']))
         return $this->response->setOutput(json_encode(array()));
         $where = '';
@@ -133,6 +158,7 @@ class ControllerOmnivaltOmnivalt extends Controller
        $date     = $this->request->post['date_added'];
        if($date != null AND $date != 'undefined' AND $date != '')
             $where  .= ' AND (date_added LIKE "%'.$date.'%" OR date_modified LIKE "%'.$date.'%" )';
+        //return $where;
             if($where == '')
         return $this->response->setOutput(json_encode(array()));
        $orders = $this->db->query("SELECT order_id, total, date_modified, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
@@ -244,5 +270,7 @@ class ControllerOmnivaltOmnivalt extends Controller
          return $this->response->setOutput('got_request');
         else
          return $this->response->setOutput(json_encode('got_false'));
+
     }
+
 }

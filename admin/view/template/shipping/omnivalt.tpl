@@ -303,19 +303,18 @@
           <div class="form-group">
                     <label class="col-sm-2 control-label" for="terminals"><?=$cron_url;?></label>
                     <div class="col-sm-10" id="terminals">
-                    <a href="<?php print HTTPS_CATALOG; ?>index.php?route=module/omnivalt"/><?php print HTTPS_CATALOG; ?>index.php?route=extension/module/omnivalt</a><br />
-                    Nuoroda galima naudoti automatiniam omnivalt terminalų atnaujinimui naudojant local serverio crontab funkcijas. 
-                    Arba jei tokios nėra - https://cron-job.org/en/ ir panašius servisus.
+                      <a href="<?php print HTTPS_CATALOG; ?>index.php?route=module/omnivalt"/><?php print HTTPS_CATALOG; ?>index.php?route=extension/module/omnivalt</a>
+                    </div>
           </div>
          <!-- Field for email templates -->
             <div class="form-group">
-                    <label class="col-sm-2 control-label" for="terminals">Email templates <Br />
-                    Enabled/Disabled 
+                    <label class="col-sm-2 control-label" for="terminals"><?=$text_email_templates_head;?> <Br />
+                    <?= $text_enabled_disabled;?>
                     <input 
                     <?php if($omnivalt_enable_templates == 'on') print 'checked'; ?>
                     type="checkbox"
                     name="omnivalt_enable_templates">
-                    <Br />(Email will be sent then first label is generated.)
+                    <br /><?=$text_email_templates;?>
                     </label>
                     <div class="col-sm-10" id="terminals">
                       <textarea 

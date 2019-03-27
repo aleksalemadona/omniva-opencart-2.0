@@ -4,19 +4,31 @@ class ControllerShippingOmnivalt extends Controller
     private $error = array();
     protected $labelsMix = 4;
 
+/**
+ * @descr extension install hook
+ * Creates additional Databas field labelsCount
+ */
     public function install()
     {
         $sql = "ALTER TABLE " . DB_PREFIX . "order ADD `labelsCount` INT NOT NULL DEFAULT '1',
-        ADD `omnivaWeight` FLOAT NOT NULL DEFAULT '1',
-        ADD `cod_amount` FLOAT DEFAULT 0;";
+  ADD `omnivaWeight` FLOAT NOT NULL DEFAULT '1',
+  ADD `cod_amount` FLOAT DEFAULT 0;";
 
         $this->db->query($sql);
+
         $this->load->model('setting/setting');
-        $sql2 = "CREATE TABLE " . DB_PREFIX . "order_omniva (id int NOT NULL AUTO_INCREMENT, tracking TEXT, manifest int, labels text, id_order int, PRIMARY KEY (id), UNIQUE (id_order));";
+
+        $sql2 = "CREATE TABLE " . DB_PREFIX . "order_omniva (id int NOT NULL AUTO_INCREMENT, tracking TEXT, manifest int, labels text, id_order int, PRIMARY KEY (id), UNIQUE (id_order));;";
+
         $this->model_setting_setting->editSetting('omniva', array('omniva_manifest' => 0));
+
         $this->db->query($sql2);
     }
 
+/**
+ * @descr removes field and disables extension
+ *
+ */
     public function uninstall()
     {
         $sql = "ALTER TABLE " . DB_PREFIX . "order DROP COLUMN labelsCount,
@@ -24,19 +36,30 @@ class ControllerShippingOmnivalt extends Controller
                                         DROP COLUMN cod_amount; ";
 
         $this->db->query($sql);
+
         $sql2 = "DROP TABLE " . DB_PREFIX . "order_omniva";
+
         $this->db->query($sql2);
+
     }
 
+/**
+ * @description set labels count to print
+ *
+ * if extension is enabled and user has permisions
+ */
     public function labelsCount()
     {
         if ($this->request->post['labelsCount'] and $this->request->post['order_id'] and $this->user->hasPermission('modify', 'shipping/omnivalt')) {
 
             $labelsCount = $this->request->post['labelsCount'];
             $order = $this->request->post['order_id'];
+
             $labelsCount = $this->request->post['labelsCount'];
             $order = $this->request->post['order_id'];
+
             $sql = "UPDATE " . DB_PREFIX . "order SET labelsCount = $labelsCount WHERE order_id= $order;";
+
             $this->db->query($sql);
 
             // return $this->response->setOutput(json_encode($order.'ok'.$labelsCount));
@@ -46,7 +69,9 @@ class ControllerShippingOmnivalt extends Controller
     public function index()
     {
         $this->load->language('shipping/omnivalt');
+
         $this->document->setTitle($this->language->get('heading_title'));
+
         $this->load->model('setting/setting');
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -58,12 +83,15 @@ class ControllerShippingOmnivalt extends Controller
             } else {
                 $this->response->redirect($this->url->link('extension/shipping', 'token=' . $this->session->data['token'] . '&type=shipping', true));
             }
+
         }
 
-        foreach (array('entry_free_price', 'cron_url', 'heading_title', 'text_edit', 'text_enabled', 'text_disabled', 'text_yes', 'text_no', 'text_none', 'text_parcel_terminal', 'text_courier', 'text_sorting_center', 'entry_url', 'entry_user', 'entry_password', 'entry_service', 'entry_pickup_type', 'entry_company', 'entry_bankaccount', 'entry_pickupstart', 'entry_pickupfinish', 'entry_cod', 'entry_status', 'entry_sort_order', 'entry_parcel_terminal_price', 'entry_courier_price', 'entry_terminals', 'button_save', 'button_cancel', 'button_download', 'entry_sender_name', 'entry_sender_address', 'entry_sender_city', 'entry_sender_postcode', 'entry_sender_phone', 'entry_sender_country_code') as $key) {
+        //add text translations in loop
+        foreach (array('text_email_templates_head', 'text_email_templates', 'text_enabled_disabled', 'entry_free_price', 'cron_url', 'heading_title', 'text_edit', 'text_enabled', 'text_disabled', 'text_yes', 'text_no', 'text_none', 'text_parcel_terminal', 'text_courier', 'text_sorting_center', 'entry_url', 'entry_user', 'entry_password', 'entry_service', 'entry_pickup_type', 'entry_company', 'entry_bankaccount', 'entry_pickupstart', 'entry_pickupfinish', 'entry_cod', 'entry_status', 'entry_sort_order', 'entry_parcel_terminal_price', 'entry_courier_price', 'entry_terminals', 'button_save', 'button_cancel', 'button_download', 'entry_sender_name', 'entry_sender_address', 'entry_sender_city', 'entry_sender_postcode', 'entry_sender_phone', 'entry_sender_country_code') as $key) {
             $data[$key] = $this->language->get($key);
         }
 
+        //add error assign loop
         foreach (array('warning', 'url', 'user', 'password') as $key) {
             if (isset($this->error[$key])) {
                 $data['error_' . $key] = $this->error[$key];
@@ -240,7 +268,8 @@ class ControllerShippingOmnivalt extends Controller
         } else {
             $data['omnivalt_sort_order'] = $this->config->get('omnivalt_sort_order');
         }
-
+        $data['omnivalt_terminals'] = $this->model_setting_setting->getSetting('omnivalt_terminals');
+    
         if (isset($this->request->post['omnivalt_lt_free'])) {
 			$data['omnivalt_lt_free'] = $this->request->post['omnivalt_lt_free'];
 		} else {
@@ -256,14 +285,17 @@ class ControllerShippingOmnivalt extends Controller
 		} else {
 			$data['omnivalt_ee_free'] = $this->config->get('omnivalt_ee_free');
 		}
-        
-        $data['omnivalt_terminals'] = $this->model_setting_setting->getSetting('omnivalt_terminals');
-
+    
+		if (isset($this->request->post['omnivalt_sort_order'])) {
+			$data['omnivalt_sort_order'] = $this->request->post['omnivalt_sort_order'];
+		} else {
+			$data['omnivalt_sort_order'] = $this->config->get('omnivalt_sort_order');
+		}
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
 
-          if (isset($this->request->post['omnivalt_email_template'])) {
+        if (isset($this->request->post['omnivalt_email_template'])) {
             $data['omnivalt_email_template'] = $this->request->post['omnivalt_email_template'];
           } else {
               $data['omnivalt_email_template'] = $this->config->get('omnivalt_email_template');
@@ -302,9 +334,9 @@ class ControllerShippingOmnivalt extends Controller
         }
         return !$this->error;
     }
-
     private function fetchUpdates()
     {
+
         $terminals = array();
         $csv = $this->fetchURL('https://www.omniva.ee/locations.csv');
         if (empty($csv)) {
@@ -325,6 +357,7 @@ class ControllerShippingOmnivalt extends Controller
 
     private function fetchURL($url)
     {
+
         $ch = curl_init(trim($url)) or die('cant create curl');
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -344,6 +377,7 @@ class ControllerShippingOmnivalt extends Controller
 
     private function parseCSV($csv, $countries = array())
     {
+
         $cabins = array();
         if (empty($csv)) {
             return $cabins;
@@ -358,7 +392,7 @@ class ControllerShippingOmnivalt extends Controller
         array_shift($rows);
 
         foreach ($rows as $row) {
-            $cabin = str_getcsv($row, ';');
+            $cabin = str_getcsv($row, ';'); //parse the items in rows
             # there are lines with all fields empty in estonian file, workaround
             if (count(array_filter($cabin))) {
                 if ($newformat) {
@@ -409,6 +443,8 @@ class ControllerShippingOmnivalt extends Controller
     private function get_tracking_number($order, $weight = 1, $packs = 1, $sendType = 'parcel')
     {
 
+//$orderInfo = new OrderInfo();
+        //$orderInfo = $orderInfo->getOrderInfo($id_order);
         if (stripos($order['shipping_code'], 'omnivalt') === false) {
             return array('error' => 'Not Omnivalt shipping method');
         }
@@ -513,24 +549,31 @@ class ControllerShippingOmnivalt extends Controller
             $postCode = preg_match('/\d+/', $order['shipping_postcode'], $matches); //426r    <address postcode="'.$order['shipping_postcode'].'"
             $postCode = $postCode ? $matches[0] : '';
             $xmlRequest .= '
-		                   <item service="' . $service . '" ' . $assignCount . '>
-		                      ' . $additionalService . '
-		                      <measures weight="' . $weight . '" />
-		                      ' . $this->cod($order, ($order['payment_code'] == 'cod'), $cod_amount) . '
-		                      <receiverAddressee >
-		                         <person_name>' . $order['shipping_firstname'] . ' ' . $order['shipping_lastname'] . '</person_name>
-		                        ' . $phones . '
-		                         <address postcode="' . $postCode . '" ' . $parcel_terminal . ' deliverypoint="' . ($order['shipping_city'] ? $order['shipping_city'] : $order['shipping_zone']) . '" country="' . $order['shipping_iso_code_2'] . '" street="' . $order['shipping_address_1'] . '" />
-		                      </receiverAddressee>
-		                      <!--Optional:-->
-		                      <returnAddressee>
-		                         <person_name>' . $this->config->get('omnivalt_sender_name') . '</person_name>
-		                         <!--Optional:-->
-		                         <phone>' . $this->config->get('omnivalt_sender_phone') . '</phone>
-		                         <address postcode="' . $this->config->get('omnivalt_sender_postcode') . '" deliverypoint="' . $this->config->get('omnivalt_sender_city') . '" country="' . $this->config->get('omnivalt_sender_country_code') . '" street="' . $this->config->get('omnivalt_sender_address') . '" />
+	                   <item service="' . $service . '" ' . $assignCount . '>
+	                      ' . $additionalService . '
+	                      <measures weight="' . $weight . '" />
+	                      ' . $this->cod($order, ($order['payment_code'] == 'cod'), $cod_amount) . '
+	                      <receiverAddressee >
+	                         <person_name>' . $order['shipping_firstname'] . ' ' . $order['shipping_lastname'] . '</person_name>
+	                        ' . $phones . '
+	                         <address postcode="' . $postCode . '" ' . $parcel_terminal . ' deliverypoint="' . ($order['shipping_city'] ? $order['shipping_city'] : $order['shipping_zone']) . '" country="' . $order['shipping_iso_code_2'] . '" street="' . $order['shipping_address_1'] . '" />
+	                      </receiverAddressee>
+	                      <!--Optional:-->
+	                      <returnAddressee>
+	                         <person_name>' . $this->config->get('omnivalt_sender_name') . '</person_name>
+	                         <!--Optional:-->
+	                         <phone>' . $this->config->get('omnivalt_sender_phone') . '</phone>
+	                         <address postcode="' . $this->config->get('omnivalt_sender_postcode') . '" deliverypoint="' . $this->config->get('omnivalt_sender_city') . '" country="' . $this->config->get('omnivalt_sender_country_code') . '" street="' . $this->config->get('omnivalt_sender_address') . '" />
 
-		                      </returnAddressee>
-		                   </item>';
+	                      </returnAddressee>
+	                      <onloadAddressee>
+	                         <person_name>' . $this->config->get('omnivalt_sender_name') . '</person_name>
+	                         <!--Optional:-->
+	                         <phone>' . $this->config->get('omnivalt_sender_phone') . '</phone>
+	                         <address postcode="' . $this->config->get('omnivalt_sender_postcode') . '" deliverypoint="' . $this->config->get('omnivalt_sender_city') . '" country="' . $this->config->get('omnivalt_sender_country_code') . '" street="' . $this->config->get('omnivalt_sender_address') . '" />
+	                        <pick_up_time start="' . date("c", strtotime($pickDay . ' ' . $pickStart)) . '" finish="' . date("c", strtotime($pickDay . ' ' . $pickFinish)) . '"/>
+	                      </onloadAddressee>
+	                   </item>';
         endfor;
 
         $xmlRequest .= '
@@ -539,10 +582,13 @@ class ControllerShippingOmnivalt extends Controller
           </xsd:businessToClientMsgRequest>
        </soapenv:Body>
     </soapenv:Envelope>';
+        //var_dump($xmlRequest);
+        //return $xmlRequest;
+        //error_log($xmlRequest);
+        //var_dump($xmlRequest);
 
         return self::api_request($xmlRequest);
     }
-
     private function getOrderWeight($order_id)
     {
         $query = $this->db->query("SELECT SUM(IF(wcd.unit ='g',(p.weight/1000),p.weight) * op.quantity) AS weight FROM " . DB_PREFIX . "order_product op LEFT JOIN " . DB_PREFIX . "product p ON op.product_id = p.product_id LEFT JOIN " . DB_PREFIX . "weight_class_description wcd ON wcd.weight_class_id = p.weight_class_id AND wcd.language_id = '" . (int) $this->config->get('config_language_id') . "' WHERE op.order_id = '" . (int) $order_id . "'");
@@ -557,6 +603,7 @@ class ControllerShippingOmnivalt extends Controller
 
     public function api_request($request)
     {
+//var_dump($request);
         $barcodes = array();
         $errors = array();
         $url = $this->config->get('omnivalt_url') . '/epmx/services/messagesService.wsdl';
@@ -580,7 +627,12 @@ class ControllerShippingOmnivalt extends Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $xmlResponse = curl_exec($ch);
-
+        //var_dump($xmlResponse);
+        //error_log($xmlResponse);
+        //echo '<pre>';
+        //var_dump($request);
+        // echo '</pre>';
+        //echo $this->config->get('omnivalt_url');
         if ($xmlResponse === false) {
             $errors[] = curl_error($ch);
         } else {
@@ -607,6 +659,7 @@ class ControllerShippingOmnivalt extends Controller
 
             }
         }
+        // }
         if (!empty($errors)) {
             return array('status' => false, 'msg' => implode('. ', $errors));
         } else {
@@ -614,28 +667,42 @@ class ControllerShippingOmnivalt extends Controller
                 return array('status' => true, 'barcodes' => $barcodes);
             }
 
+            //var_dump($barcodes);
             $errors[] = 'No saved barcodes received';
             return array('status' => false, 'msg' => implode('. ', $errors));
         }
     }
     private function getShipmentLabels($barcodes, $order_id = null)
     {
+
         $errors = array();
         $barcodeXML = '';
+        /*for($i = 0; $i <count($barcodes);$i++) {
+        $barcodeXML .= '<barcode>'.$barcodes[$i].'</barcode>';
+
+        }*/
+        /*foreach ($barcodes as $barcode){
+        $barcodeXML .= '<barcode>'.$barcode.'</barcode>';
+        }*/
+        //$barcodeXML .= '<barcode>CE475142343EE</barcode><barcode>CE475142887EE</barcode>';
 
         $xmlRequest = '
-            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://service.core.epmx.application.eestipost.ee/xsd">
-            <soapenv:Header/>
-            <soapenv:Body>
-                <xsd:addrcardMsgRequest>
-                    <partner>' . $this->config->get('omnivalt_user') . '</partner>
-                    <sendAddressCardTo>response</sendAddressCardTo>
-                    <barcodes>
-                    <barcode>' . $barcodes . '</barcode>
-                    </barcodes>
-                </xsd:addrcardMsgRequest>
-            </soapenv:Body>
-            </soapenv:Envelope>';
+    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://service.core.epmx.application.eestipost.ee/xsd">
+       <soapenv:Header/>
+       <soapenv:Body>
+          <xsd:addrcardMsgRequest>
+             <partner>' . $this->config->get('omnivalt_user') . '</partner>
+             <sendAddressCardTo>response</sendAddressCardTo>
+             <barcodes>
+             <barcode>' . $barcodes . '</barcode>
+
+             </barcodes>
+          </xsd:addrcardMsgRequest>
+       </soapenv:Body>
+    </soapenv:Envelope>';
+        //echo $xmlRequest;                    '/*.$barcodeXML.*/'
+
+        //var_dump($xmlRequest);
 
         try {
             $url = $this->config->get('omnivalt_url') . '/epmx/services/messagesService.wsdl';
@@ -646,6 +713,7 @@ class ControllerShippingOmnivalt extends Controller
                 "Pragma: no-cache",
                 "Content-length: " . strlen($xmlRequest),
             );
+            //var_dump($xmlRequest);
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -721,6 +789,7 @@ class ControllerShippingOmnivalt extends Controller
             if (!is_object($xml)) {
                 $errors[] = $this->l('Response is in the wrong format');
             }
+            //$this->_debug($xml);
             if (is_object($xml) && is_object($xml->event)) {
                 foreach ($xml->event as $awbinfo) {
                     $awbinfoData = [];
@@ -731,6 +800,7 @@ class ControllerShippingOmnivalt extends Controller
                         continue;
                     }
 
+                    //$this->_debug($awbinfo);
                     $packageProgress = [];
                     if (isset($resultArr[$trackNum]['progressdetail'])) {
                         $packageProgress = $resultArr[$trackNum]['progressdetail'];
@@ -749,7 +819,18 @@ class ControllerShippingOmnivalt extends Controller
                 }
             }
         }
-
+        /*
+        if (!empty($resultArr)) {
+        foreach ($resultArr as $trackNum => $data) {
+        $tracking = $this->_trackStatusFactory->create();
+        $tracking->setCarrier($this->_code);
+        $tracking->setCarrierTitle($this->getConfigData('title'));
+        $tracking->setTracking($trackNum);
+        $tracking->addData($data);
+        $result->append($tracking);
+        }
+        }
+         */
         if (!empty($errors)) {
             return false;
         }
@@ -827,16 +908,18 @@ class ControllerShippingOmnivalt extends Controller
         $company = $this->config->get('omnivalt_company');
         $bank_account = $this->config->get('omnivalt_bankaccount');
         $setting_cod = $this->config->get('omnivalt_cod');
+//if($order->module == 'cashondelivery' && $cod) {
         if ($cod) {
             return '<monetary_values>
-                    <cod_receiver>' . $company . '</cod_receiver>
-                    <values code="item_value" amount="' . $amount . '"/>
-                    </monetary_values>
-                    <account>' . $bank_account . '</account>
-                    <reference_number>' . self::getReferenceNumber($order['order_id']) . '</reference_number>';
+    <cod_receiver>' . $company . '</cod_receiver>
+    <values code="item_value" amount="' . $amount . '"/>
+  </monetary_values>
+  <account>' . $bank_account . '</account>
+  <reference_number>' . self::getReferenceNumber($order['order_id']) . '2</reference_number>';
         } else {
             return '';
         }
+
     }
 
     private function updateOrderStatus($order_id, $order_status_id, $comment)
@@ -1038,9 +1121,8 @@ class ControllerShippingOmnivalt extends Controller
                         if ($track_numer) {
                             $this->updateOrderStatus($order_id, $status_id, $track_numer);
                             $this->setOmnivaOrder($order_id, $track_numer);
-
                         }
-
+                        //$this->sendNotification($order_id, $track_numer);
                     }
 /****************************** */
                 }
@@ -1072,7 +1154,7 @@ class ControllerShippingOmnivalt extends Controller
             $tracking = array($tracking);
             $tracking = json_encode($tracking);
             $this->db->query("INSERT INTO " . DB_PREFIX . "order_omniva (tracking, manifest, labels, id_order)
-            VALUES ('$tracking','$manifest','$label','$id_order')");
+  VALUES ('$tracking','$manifest','$label','$id_order')");
             if ($this->config->get('omnivalt_enable_templates') == 'on') {
                 $this->sendNotification($id_order, $tracking);
             }
@@ -1080,14 +1162,23 @@ class ControllerShippingOmnivalt extends Controller
     }
     private function sendNotification($id_order = '', $tracking = '154233775CE')
     {
-        return;//Uncomment to enable
+    
         try {
             $order = $this->model_sale_order->getOrder($id_order);
     
             $subject = $this->config->get('config_name') . ' uzsakymo pasikeitimai' . $tracking;
             $message = $this->config->get('omnivalt_email_template');
-            $mail = new Mail($this->config->get('config_mail'));
-	    $mail->setTo($order['email']);
+
+            $mail = new Mail();
+            $mail->protocol = $this->config->get('config_mail_protocol');
+            $mail->parameter = $this->config->get('config_mail_parameter');
+            $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+            $mail->smtp_username = $this->config->get('config_mail_smtp_username');
+            $mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+            $mail->smtp_port = $this->config->get('config_mail_smtp_port');
+            $mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+
+            $mail->setTo('neriejus@gg.gg');
             $mail->setFrom($this->config->get('config_email'));
             $mail->setSender($this->config->get('config_name'));
             $mail->setSubject($subject);
@@ -1110,6 +1201,7 @@ class ControllerShippingOmnivalt extends Controller
             if (!$query->row) {
                 $status_id = false;
             }
+
         }
 
         if (!$status_id) {
@@ -1148,6 +1240,7 @@ class ControllerShippingOmnivalt extends Controller
         if ($status_id) {
             $query = $this->db->query("SELECT comment FROM `" . DB_PREFIX . "order_history` WHERE  `order_status_id` = " . (int) $status_id . " AND `order_id` = " . (int) $order_id . " ORDER BY `order_history_id` DESC");
             if ($query->row && $query->row['comment'] != '')
+            //return $query->row['comment'];
             {
                 return $query->rows;
             }
@@ -1155,13 +1248,13 @@ class ControllerShippingOmnivalt extends Controller
         }
         return '';
     }
-
     public function printDocs()
     {
         if (!isset($this->request->post['print'])) {
             exit();
         }
 
+//var_dump($_POST);
         $this->load->model('setting/setting');
         $manifest = intval($this->config->get('omniva_manifest'));
         if (isset($_POST['manifest']) and intval($_POST['manifest']) == $manifest and $_POST['print'] == 'manifest' and !isset($this->request->post['new'])) {
@@ -1182,7 +1275,6 @@ class ControllerShippingOmnivalt extends Controller
                 break;
         }
     }
-
     public function manifest()
     {
         if (isset($_POST['selected']) && count($_POST['selected'])) {
@@ -1201,6 +1293,7 @@ class ControllerShippingOmnivalt extends Controller
             $count = 1;
             foreach ($_POST['selected'] as $order_id) {
                 $order = $this->model_sale_order->getOrder($order_id);
+                //setting package weight
                 $quantity = $this->model_sale_order->getOrderProducts($order_id);
                 $productCount = 0;
                 $kilos = 0;
@@ -1210,6 +1303,7 @@ class ControllerShippingOmnivalt extends Controller
                     $product = $this->model_catalog_product->getProduct($product['product_id']);
                     $plusKilo = floatval($product['weight']);
                     $kilos += $plusKilo * $plusCount;
+                    //var_dump($product);
                 }
 
                 $productsCnt = intval($order['labelsCount']);
@@ -1218,6 +1312,7 @@ class ControllerShippingOmnivalt extends Controller
                 }
 
                 $kilos = $kilos / $productsCnt;
+                //var_dump($productCount, $kilos);
                 if (!(stripos($order['shipping_code'], 'omnivalt.courier') !== false || stripos($order['shipping_code'], 'omnivalt.parcel_terminal') !== false)) {
                     continue;
                 }
@@ -1227,6 +1322,9 @@ class ControllerShippingOmnivalt extends Controller
                     $track_numer = array_reverse($track_numer);
                 }
 
+                /*print'<pre>';
+                var_dump($track_numer);
+                print'</pre>';*/
                 if (intval($order['labelsCount']) > count($track_numer) and $track_numer != 0) {
                     $rows = count($track_numer);
                 } else if (intval($order['labelsCount']) <= count($track_numer) and $track_numer != 0) {
@@ -1235,10 +1333,15 @@ class ControllerShippingOmnivalt extends Controller
                     print 'Please generate labels first';
                     exit;
                 }
+                //for($i = 0; $i <count($track_numer); $i++) {
+                //while() {
                 for ($i = 0; $i < $rows; $i++) {
                     if ($track_numer[$i] == '') {
                         $status = $this->get_tracking_number($order);
                         if ($status['status']) {
+                            //$order->setWsShippingNumber($status['barcodes'][0]);
+                            //$order->save();
+                            // $track_numer = $status['barcodes'][0];
                             $status_id = $this->readyStatus();
                             if ($track_numer) {
                                 $this->updateOrderStatus($order_id, $status_id, $track_numer);
@@ -1250,8 +1353,10 @@ class ControllerShippingOmnivalt extends Controller
                             continue;
                         }
                     }
+                    //$address = new Address($order->id_address_delivery);
                     $order_table .= '<tr><td width = "40" align="right">' . $count . '.</td><td>' . $track_numer[$i]['comment'] . '</td><td width = "60">' . date('Y-m-d') . '</td><td width = "40">1</td><td width = "60">' . $kilos . '</td><td width = "210">' . $order['shipping_firstname'] . ' ' . $order['shipping_lastname'] . ', ' . $order['shipping_address_1'] . ', ' . $order['shipping_postcode'] . ', ' . $order['shipping_city'] . ' ' . $order['shipping_country'] . '</td></tr>';
                     $count++;
+                    //make order shipped after creating manifest
                     $this->shipOrder($order_id);
                 }
             }
@@ -1307,22 +1412,22 @@ class ControllerShippingOmnivalt extends Controller
             $delivery_method = $delivery_method[0];
             if ($cod_available == 1 && $cod_value > 0) {
                 $sql = "UPDATE " . DB_PREFIX . "order SET labelsCount = $labelsCount ,
-                        omnivaWeight = $omnivaWeight ,
-                        shipping_code = '" . $delivery_method . "' ,
-                        shipping_method = '" . $delivery_methodName . "',
-                        cod_amount = $cod_value
-                        WHERE order_id= $order_id;";
+          omnivaWeight = $omnivaWeight ,
+          shipping_code = '" . $delivery_method . "' ,
+          shipping_method = '" . $delivery_methodName . "',
+          cod_amount = $cod_value
+          WHERE order_id= $order_id;";
 
                 $sql2 = "UPDATE " . DB_PREFIX . "order_total SET title = '" . $delivery_methodName . "' WHERE order_id= $order_id AND code = 'shipping';";
                 $this->db->query($sql);
                 $this->db->query($sql2);
             } else {
                 $sql = "UPDATE " . DB_PREFIX . "order SET labelsCount = $labelsCount ,
-                        omnivaWeight = $omnivaWeight ,
-                        shipping_code = '" . $delivery_method . "' ,
-                        shipping_method = '" . $delivery_methodName . "',
-                        cod_amount = 888888
-                        WHERE order_id= $order_id;";
+    omnivaWeight = $omnivaWeight ,
+    shipping_code = '" . $delivery_method . "' ,
+    shipping_method = '" . $delivery_methodName . "',
+    cod_amount = 888888
+    WHERE order_id= $order_id;";
 
                 $sql2 = "UPDATE " . DB_PREFIX . "order_total SET title = '" . $delivery_methodName . "' WHERE order_id= $order_id AND code = 'shipping';";
                 $this->db->query($sql);
@@ -1334,9 +1439,10 @@ class ControllerShippingOmnivalt extends Controller
             } else {
                 $this->response->redirect($this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id, true));
             }
+
         }
+
     }
-    
     public function generateLabel()
     {
         $this->labels2(true);
@@ -1525,7 +1631,7 @@ class ControllerShippingOmnivalt extends Controller
                         $this->labelsMix++;
                         if ($track_numer) {
                             $this->updateOrderStatus($order_id, $status_id, $track_numer);
-                            $this->setOmnivaOrder($order_id, $track_numer);
+                            //$this->setOmnivaOrder($order_id, $track_numer);
 
                         }
 

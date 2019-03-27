@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']                            = 'Omnivalt';
+$_['heading_title']                            = 'Omniva';
 
 // Text
 $_['text_shipping']                            = 'Shipping';
@@ -49,35 +49,47 @@ $_['error_password']                           = 'Password required!';
 $_['error_required']                           = 'Field required!';
 
 //Menu
-$_['menu_head']              = 'Omnivalt';
-$_['menu_manifest']          = 'Orders';
-$_['menu_settings']          = 'Settings';
+$_['menu_head']             = 'Omnivalt';
+$_['menu_manifest']         = 'Orders';
+$_['menu_settings']         = 'Settings';
 // orders
-$_['generate_labels']               = 'Generate Omnivalt labels';
-$_['print_manifest']                = 'Print Omnivalt manifest';
-$_['labels_count']                  = 'Labels Count';
-$_['weight']                        = 'Weight';
-$_['cod_amount']                    = 'C.O.D. amount';
-$_['delivery_method']               = 'Delivery method';
-$_['renew']                         = 'Update';
+$_['generate_labels']       = 'Generate Omnivalt labels';
+$_['print_manifest']        = 'Print Omnivalt manifest';
+$_['labels_count']          = 'Labels Count';
+$_['weight']                = 'Weight';
+$_['cod_amount']            = 'C.O.D. amount';
+$_['delivery_method']       = 'Delivery method';
+$_['renew']                 = 'Update';
 
 ///Manifest
-$_['text_new_orders'] = 'New';
-$_['text_awaiting'] = 'Pending';
-$_['text_completed'] = 'Completed';
-$_['text_search'] = 'Search';
-$_['text_manifest'] = 'Manifest';
-$_['text_labels'] = 'Labels';
-$_['text_customer'] = 'Customer';
-$_['text_date'] = 'Date Modified';
-$_['text_total'] = 'Total';
-$_['text_labels'] = 'Labels';
-$_['text_skip_order'] = 'Skip Order';
-$_['text_add_order'] = 'Add to Manifest';
-$_['text_tracking_num'] = 'Tracking nr.';
-$_['generate_label']               = 'Generate labels';
+$_['text_new_orders']       = 'New';
+$_['text_awaiting']         = 'Pending';
+$_['text_completed']        = 'Completed';
+$_['text_search']           = 'Search';
+$_['text_manifest']         = 'Manifest';
+$_['text_labels']           = 'Labels';
+$_['text_customer']         = 'Customer';
+$_['text_date']             = 'Date Modified';
+$_['text_total']            = 'Total';
+$_['text_labels']           = 'Labels';
+$_['text_skip_order']       = 'Skip Order';
+$_['text_add_order']        = 'Add to Manifest';
+$_['text_tracking_num']     = 'Tracking nr.';
+$_['generate_label']        = 'Generate labels';
 $_['text_skipped_zero']     = 'Nothing to show, skipped orders count is zero!!!';
-$_['text_new_zero']     = 'Nothing to show, skipped orders count is zero!!!';
+$_['text_new_zero']         = 'Nothing to show, skipped orders count is zero!!!';
 $_['text_start_search']     = 'Užpildykite laukus pradėti paiešką.';
 $_['text_start_search']     = 'Fill fields to start search.';
-$_['entry_free_price']      = "Make shipping free from this price";
+
+
+$_['text_email_templates']  = '(emails are sent  with first generatedlabel only)';
+$_['text_enabled_disabled'] = 'Enabled/Disabled';
+$_['text_email_templates_head'] = 'Email templates';
+
+$_['text_courier_call']        = 'Final parcel, courier call.';
+$_['text_omniva_important']    = 'Important!';
+$_['text_latest_courier_call'] = 'The latest available courier call is up to 15:00. Later on, the courier does not guarantee that the shipment will be taken.';
+$_['text_eshop_settings']      = 'E-shop address settings';
+$_['text_eshop_settings_p']    = 'can be changed in the Omnivalt module settings.';
+$_['text_omniva_data_send']    = 'Sending data';
+$_['text_omniva_not_found']    = 'Nothing found.';
