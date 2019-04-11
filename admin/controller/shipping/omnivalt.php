@@ -81,7 +81,7 @@ class ControllerShippingOmnivalt extends Controller
             if (!empty($this->request->post['download'])) {
                 $this->fetchUpdates();
             } else {
-                $this->response->redirect($this->url->link('extension/shipping', 'token=' . $this->session->data['token'] . '&type=shipping', true));
+                $this->response->redirect($this->url->link('extension/extension', 'token=' . $this->session->data['token'] . '&type=shipping', true));
             }
 
         }
