@@ -86,27 +86,6 @@ class ControllerOmnivaltOmnivalt extends Controller
             ORDER BY order_id DESC;
             "
           );
-
-        // $orders = $this->db->query("SELECT order_id, total, date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
-        //                             FROM ".DB_PREFIX."order A
-        //                             LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
-        //                             WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.tracking IS NOT NULL AND B.manifest != $manifest AND B.manifest != -1
-        //                             ORDER BY manifest DESC, order_id DESC
-        //                             LIMIT $start, $limit  
-        //                             ;");
-        // $newOrders = $this->db->query("SELECT order_id, total, date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
-        //                             FROM ".DB_PREFIX."order A
-        //                             LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
-        //                             WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND (B.tracking IS NULL OR B.manifest = $manifest)
-        //                             ORDER BY order_id DESC
-        //                             ;");
-
-        // $skipped = $this->db->query("SELECT order_id, total, date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
-        //             FROM ".DB_PREFIX."order A
-        //             LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
-        //             WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.manifest = -1
-        //             ORDER BY order_id DESC
-        //             ;");
         $data['newOrders'] = $newOrders->rows;
         $this->addFormatedTotal($data['newOrders']);
         /*if($page > 1) 
@@ -217,12 +196,6 @@ class ControllerOmnivaltOmnivalt extends Controller
         WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' " . $where . "
         ORDER BY manifest DESC, order_id DESC
         ;");
-    //    $orders = $this->db->query("SELECT order_id, total, date_modified, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
-    //     FROM ".DB_PREFIX."order A
-    //     LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
-    //     WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' ".$where."
-    //     ORDER BY manifest DESC, order_id DESC
-    //     ;");
 
         $i =0;
         $orderArrBack = array();
