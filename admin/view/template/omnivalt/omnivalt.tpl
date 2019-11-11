@@ -58,7 +58,7 @@ echo $header, $column_left;
                <?php
         $variable = json_decode($nOrder['tracking']);
         $numb = intval($nOrder['labelscount']);
-        if($numb > count($variable))
+        if($variable && $numb > count($variable))
             $numb = count($variable);
         for($i=0; $i<$numb; $i++) {
             echo $variable[$i].'<br>';
@@ -66,7 +66,7 @@ echo $header, $column_left;
         ?>
         </td>
         <td width='15%'><?=$nOrder['date_modified'];?></td>
-        <td width='15%'><?=$nOrder['total'];?></td>
+        <td width='15%'><?=$nOrder['formated_total'];?></td>
         <td width='15%'>
         <a href="<?=$genLabels;?>&order_id=<?=$nOrder['order_id'];?>" target="_blank"><?=$generate_label;?></a>
         <?php if($nOrder['tracking'] == null) {?>
@@ -105,7 +105,7 @@ echo $header, $column_left;
         <td width='15%'><a href="<?php echo $client.'&order_id='.$nOrder['order_id'];?>" target="_blank"><?=$nOrder['full_name'];?></a></td>
         <td width='15%'></td>
         <td width='15%'><?=$nOrder['date_modified'];?></td>
-        <td width='15%'><?=$nOrder['total'];?></td>
+        <td width='15%'><?=$nOrder['formated_total'];?></td>
         <td width='15%'>
                 <?php if($nOrder['manifest'] == -1 || true){?>
             <a href="<?=$cancelSkip;?>&order_id=<?=$nOrder['order_id'];?>"><?=$text_add_order;?></a>
@@ -161,7 +161,7 @@ $newPage = true;
         ?>
         </td>
         <td><?=$order['date_modified'];?></td>
-        <td><?=$order['total'];?></td>
+        <td><?=$order['formated_total'];?></td>
         <?php /*<td><?=$order['labels'];?></td>*/?>
         <td ><?php /*echo $order['manifest']; */ ?>
         <a href="<?=$genLabels;?>&order_id=<?=$order['order_id'];?>" target="_blank"><?=$generate_label;?></a>
@@ -338,7 +338,7 @@ $(document).ready(function() {
                 <td> <a href='index.php?route=sale/order/info&token=<?php echo $token; ?>&order_id="+gotOrder['order_id']+"' target='_blank'>"+gotOrder['full_name']+"</a></td>\
                 <td> "+gotOrder['tracking']+"</a></td>\
                 <td>"+gotOrder['date_modified']+"</td>\
-                <td>"+gotOrder['total']+"</td>\
+                <td>"+gotOrder['formated_total']+"</td>\
                 <td> <a href='index.php?route=extension/shipping/omnivalt/labels&token=<?php echo $token; ?>&order_id="+gotOrder['order_id']+"' target='_blank'>Generuoti lipdukus</a></td>\
             </tr>");
         }

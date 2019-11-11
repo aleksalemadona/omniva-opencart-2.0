@@ -5,6 +5,7 @@ $_['heading_title']                            = 'Omniva';
 // Text
 $_['text_shipping']                            = 'Shipping';
 $_['text_success']                             = 'Success: You have modified Omnivalt shipping!';
+$_['text_download_notification']               = 'Terminal list updated';
 $_['text_edit']                                = 'Edit Omnivalt Shipping';
 $_['text_courier']                             = 'Courier';
 $_['text_parcel_terminal']                     = 'Parcel terminal';
@@ -39,7 +40,7 @@ $_['entry_sender_postcode']                    = 'Sender postcode';
 $_['entry_sender_country_code']                = 'Sender country code';
 $_['entry_sender_city']                        = 'Sender city';
 $_['entry_sender_phone']                       = 'Sender phone';
-$_['cron_url']                                 = 'Crontask url';
+$_['text_cron_url']                                 = 'Crontask url';
 
 // Error
 $_['error_permission']                         = 'Warning: You do not have permission to modify Omnivalt shipping!';
@@ -93,3 +94,7 @@ $_['text_eshop_settings']      = 'E-shop address settings';
 $_['text_eshop_settings_p']    = 'can be changed in the Omnivalt module settings.';
 $_['text_omniva_data_send']    = 'Sending data';
 $_['text_omniva_not_found']    = 'Nothing found.';
+
+$_['text_call_omniva']    = 'Call Omniva Courier';
+$_['entry_free_price'] = "free from";
+$_['entry_tax_class']   = "Tax class";

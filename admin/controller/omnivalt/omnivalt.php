@@ -6,6 +6,17 @@
  */
 class ControllerOmnivaltOmnivalt extends Controller 
 {
+    /**
+     * Adds to supplied array of orders new value with formated total.
+     */
+    protected function addFormatedTotal(&$orders)
+    {
+        foreach ($orders as &$order) {
+           // echo json_encode($order); die;
+        $order['formated_total'] = $this->currency->format($order['total'], $order['currency_code'], $order['currency_value']);
+        }
+    }
+
     public function index() 
     {
         /*
@@ -42,27 +53,62 @@ class ControllerOmnivaltOmnivalt extends Controller
         $pagination->url = $this->url->link('omnivalt/omnivalt', 'token=' . $this->session->data['token'] .'&page={page}#imp', 'SSL');
         $data['pagination'] = $pagination->render();
 
-        $orders = $this->db->query("SELECT order_id, total, date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
-                                    FROM ".DB_PREFIX."order A
-                                    LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
-                                    WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.tracking IS NOT NULL AND B.manifest != $manifest AND B.manifest != -1
-                                    ORDER BY manifest DESC, order_id DESC
-                                    LIMIT $start, $limit  
-                                    ;");
-        $newOrders = $this->db->query("SELECT order_id, total, date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
-                                    FROM ".DB_PREFIX."order A
-                                    LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
-                                    WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND (B.tracking IS NULL OR B.manifest = $manifest)
-                                    ORDER BY order_id DESC
-                                    ;");
 
-        $skipped = $this->db->query("SELECT order_id, total, date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
-                    FROM ".DB_PREFIX."order A
-                    LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
-                    WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.manifest = -1
-                    ORDER BY order_id DESC
-                    ;");
+        $orders = $this->db->query(
+            "
+            SELECT order_id, A.total, A.currency_value, A.currency_code, A.date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, 
+            B.tracking, B.manifest, B.labels, B.id_order
+            FROM " . DB_PREFIX . "order A
+            LEFT JOIN " . DB_PREFIX . "order_omniva B ON A.order_id = B.id_order
+            WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.tracking IS NOT NULL AND B.manifest != $manifest AND B.manifest != -1
+            ORDER BY manifest DESC, order_id DESC
+            LIMIT $start, $limit;
+            "
+          );
+          $newOrders = $this->db->query(
+            "
+            SELECT order_id, A.total, A.currency_value, A.currency_code, A.date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, 
+            B.tracking, B.manifest, B.labels, B.id_order
+            FROM " . DB_PREFIX . "order A
+            LEFT JOIN " . DB_PREFIX . "order_omniva B ON A.order_id = B.id_order
+            WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND (B.tracking IS NULL OR B.manifest = $manifest)
+            ORDER BY order_id DESC;
+            "
+          );
+      
+          $skipped = $this->db->query(
+            "
+            SELECT order_id, A.total, A.currency_value, A.currency_code, A.date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, 
+            B.tracking, B.manifest, B.labels, B.id_order
+            FROM " . DB_PREFIX . "order A
+            LEFT JOIN " . DB_PREFIX . "order_omniva B ON A.order_id = B.id_order
+            WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.manifest = -1
+            ORDER BY order_id DESC;
+            "
+          );
+
+        // $orders = $this->db->query("SELECT order_id, total, date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
+        //                             FROM ".DB_PREFIX."order A
+        //                             LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
+        //                             WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.tracking IS NOT NULL AND B.manifest != $manifest AND B.manifest != -1
+        //                             ORDER BY manifest DESC, order_id DESC
+        //                             LIMIT $start, $limit  
+        //                             ;");
+        // $newOrders = $this->db->query("SELECT order_id, total, date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
+        //                             FROM ".DB_PREFIX."order A
+        //                             LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
+        //                             WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND (B.tracking IS NULL OR B.manifest = $manifest)
+        //                             ORDER BY order_id DESC
+        //                             ;");
+
+        // $skipped = $this->db->query("SELECT order_id, total, date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
+        //             FROM ".DB_PREFIX."order A
+        //             LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
+        //             WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.manifest = -1
+        //             ORDER BY order_id DESC
+        //             ;");
         $data['newOrders'] = $newOrders->rows;
+        $this->addFormatedTotal($data['newOrders']);
         /*if($page > 1) 
         $data['newOrders'] = null;
         */
@@ -70,10 +116,12 @@ class ControllerOmnivaltOmnivalt extends Controller
         //if($page > 1) 
         $data['newPage'] = null;
         $data['skipped'] = $skipped->rows;
+        $this->addFormatedTotal($data['skipped']);
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
         $data['orders'] = $orders->rows;
+        $this->addFormatedTotal($data['orders']);
 
         $data['breadcrumbs'] = array();
         $data['breadcrumbs'][] = array(
@@ -161,12 +209,20 @@ class ControllerOmnivaltOmnivalt extends Controller
         //return $where;
             if($where == '')
         return $this->response->setOutput(json_encode(array()));
-       $orders = $this->db->query("SELECT order_id, total, date_modified, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
-        FROM ".DB_PREFIX."order A
-        LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
-        WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' ".$where."
+        $orders = $this->db->query("
+        SELECT order_id, A.total, A.currency_value, A.currency_code, A.date_modified, CONCAT(firstname, ' ', lastname) AS full_name, 
+        B.tracking, B.manifest, B.labels, B.id_order
+        FROM " . DB_PREFIX . "order A
+        LEFT JOIN " . DB_PREFIX . "order_omniva B ON A.order_id = B.id_order
+        WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' " . $where . "
         ORDER BY manifest DESC, order_id DESC
         ;");
+    //    $orders = $this->db->query("SELECT order_id, total, date_modified, CONCAT(firstname, ' ', lastname) AS full_name, B.tracking, B.manifest, B.labels, B.id_order 
+    //     FROM ".DB_PREFIX."order A
+    //     LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
+    //     WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' ".$where."
+    //     ORDER BY manifest DESC, order_id DESC
+    //     ;");
 
         $i =0;
         $orderArrBack = array();
@@ -181,6 +237,7 @@ class ControllerOmnivaltOmnivalt extends Controller
             $orderArrBack[$i]['tracking'] = $tracking;
             $orderArrBack[$i]['date_modified'] = $order['date_modified'];
             $orderArrBack[$i]['total'] = $order['total'];
+            $orderArrBack[$i]['formated_total'] = $this->currency->format($order['total'], $order['currency_code'], $order['currency_value']);
             $orderArrBack[$i]['labels'] = $order['labels'];
             $i++;
             if($i >50)

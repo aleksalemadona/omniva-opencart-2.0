@@ -47,6 +47,7 @@
                     </tr>
                     <tr>
                       <td colspan="4"><?=$delivery_method;?>
+                        <script>console.log('<?php echo $courier_title; ?>')</script>
                         <select name="delivery_method" class="form-control input-sm">
                         <option disabled>Select labels count</option>
                         <option value="omnivalt.courier|OmnivaLt kurjeris">Omnivalt Courier</option>

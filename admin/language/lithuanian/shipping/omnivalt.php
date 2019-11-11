@@ -4,6 +4,7 @@ $_['heading_title']                            = 'Omniva';
 // Text
 $_['text_shipping']                            = 'Siuntimas';
 $_['text_success']                             = 'Atlikta: redagavimas baigtas!';
+$_['text_download_notification']               = 'Terminalų sąrašas atnaujintas';
 $_['text_edit']                                = 'Redaguoti Omnivalt siuntimus';
 $_['text_courier']                             = 'Kurjeris';
 $_['text_parcel_terminal']                     = 'Paštomatai';
@@ -35,7 +36,7 @@ $_['entry_sender_postcode']                    = 'Siuntėjo pašto kodas';
 $_['entry_sender_country_code']                = 'Siuntėjo šalies kodas (LT)';
 $_['entry_sender_city']                        = 'Siuntėjo miestas';
 $_['entry_sender_phone']                       = 'Siuntėjo telefonas';
-$_['cron_url']                                 = 'Periodiniu užduočių url';
+$_['text_cron_url']                                 = 'Periodiniu užduočių url';
 // Error
 $_['error_permission']                         = 'Įspėjimas: Neturite teisių redaguoti Omnivalt siuntimus!';
 $_['error_url']                                = 'Api URL privalomas!';
@@ -88,3 +89,4 @@ $_['text_omniva_data_send']    = 'Siunčiami duomenys';
 $_['text_omniva_not_found'] = 'Pagal pateiktus duomenis nieko nera.';
 
 $_['entry_free_price'] = "nemokamas siuntimas nuo";
+$_['entry_tax_class']   = "Mokesčių klasė";
