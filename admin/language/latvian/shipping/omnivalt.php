@@ -4,6 +4,7 @@ $_['heading_title']                            = 'Omniva';
 // Text
 $_['text_shipping']                            = 'Pasūtījuma piegāde';
 $_['text_success']                             = 'Iestatījumi veiksmīgi saglabāti!';
+$_['text_download_notification']               = 'Termināļu saraksts ir atjaunināts';
 $_['text_edit']                                = 'Labot Omniva piegādes veidu';
 $_['text_courier']                             = 'Kurjerpakalpojums';
 $_['text_parcel_terminal']                     = 'Pakomāts';
@@ -35,7 +36,7 @@ $_['entry_sender_postcode']                    = 'Sūtītāja pasta indekss';
 $_['entry_sender_country_code']                = 'Sūtītāja valsts kods (LT, LV, EE)';
 $_['entry_sender_city']                        = 'Sūtītāja pilsēta';
 $_['entry_sender_phone']                       = 'Sūtītāja tālruņa numurs';
-$_['cron_url']                                 = 'Cron url';
+$_['text_cron_url']                                 = 'Cron url';
 // Error
 $_['error_permission']                         = 'Uzmanību: You do not have permission to modify Omnivalt shipping!';
 $_['error_url']                                = 'Nepieciešams norādīt URL!';
@@ -86,3 +87,5 @@ $_['text_eshop_settings_p']    = 'var mainīt Omnivalt moduļa iestatījumos.';
 $_['text_omniva_data_send']    = 'Datu sūtīšana';
 $_['text_omniva_not_found']    = 'Nekas nav atrasts';
 
+$_['entry_free_price'] = "brīvs no";
+$_['entry_tax_class']   = "Nodokļu klase";

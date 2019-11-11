@@ -4,7 +4,6 @@ class ControllerCommonMenu extends Controller {
 		$this->load->language('common/menu');
 
 		$data['text_affiliate'] = $this->language->get('text_affiliate');
-		$data['text_affiliate_activity'] = $this->language->get('text_affiliate_activity');
 		$data['text_api'] = $this->language->get('text_api');
 		$data['text_attribute'] = $this->language->get('text_attribute');
 		$data['text_attribute_group'] = $this->language->get('text_attribute_group');
@@ -30,6 +29,7 @@ class ControllerCommonMenu extends Controller {
 		$data['text_error_log'] = $this->language->get('text_error_log');
 		$data['text_extension'] = $this->language->get('text_extension');
 		$data['text_feed'] = $this->language->get('text_feed');
+		$data['text_fraud'] = $this->language->get('text_fraud');
 		$data['text_filter'] = $this->language->get('text_filter');
 		$data['text_geo_zone'] = $this->language->get('text_geo_zone');
 		$data['text_dashboard'] = $this->language->get('text_dashboard');
@@ -56,6 +56,7 @@ class ControllerCommonMenu extends Controller {
 		$data['text_report_sale_shipping'] = $this->language->get('text_report_sale_shipping');
 		$data['text_report_sale_return'] = $this->language->get('text_report_sale_return');
 		$data['text_report_sale_coupon'] = $this->language->get('text_report_sale_coupon');
+		$data['text_report_sale_return'] = $this->language->get('text_report_sale_return');
 		$data['text_report_product_viewed'] = $this->language->get('text_report_product_viewed');
 		$data['text_report_product_purchased'] = $this->language->get('text_report_product_purchased');
 		$data['text_report_customer_activity'] = $this->language->get('text_report_customer_activity');
@@ -63,9 +64,9 @@ class ControllerCommonMenu extends Controller {
 		$data['text_report_customer_order'] = $this->language->get('text_report_customer_order');
 		$data['text_report_customer_reward'] = $this->language->get('text_report_customer_reward');
 		$data['text_report_customer_credit'] = $this->language->get('text_report_customer_credit');
-		$data['text_report_sale_return'] = $this->language->get('text_report_sale_return');
-		$data['text_report_product_viewed'] = $this->language->get('text_report_product_viewed');
 		$data['text_report_customer_order'] = $this->language->get('text_report_customer_order');
+		$data['text_report_affiliate'] = $this->language->get('text_report_affiliate');
+		$data['text_report_affiliate_activity'] = $this->language->get('text_report_affiliate_activity');
 		$data['text_review'] = $this->language->get('text_review');
 		$data['text_return'] = $this->language->get('text_return');
 		$data['text_return_action'] = $this->language->get('text_return_action');
@@ -97,6 +98,7 @@ class ControllerCommonMenu extends Controller {
 		$data['text_openbay_orders'] = $this->language->get('text_openbay_orders');
 		$data['text_openbay_items'] = $this->language->get('text_openbay_items');
 		$data['text_openbay_ebay'] = $this->language->get('text_openbay_ebay');
+		$data['text_openbay_etsy'] = $this->language->get('text_openbay_etsy');
 		$data['text_openbay_amazon'] = $this->language->get('text_openbay_amazon');
 		$data['text_openbay_amazonus'] = $this->language->get('text_openbay_amazonus');
 		$data['text_openbay_settings'] = $this->language->get('text_openbay_settings');
@@ -125,6 +127,7 @@ class ControllerCommonMenu extends Controller {
 		$data['error_log'] = $this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL');
 		$data['feed'] = $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL');
 		$data['filter'] = $this->url->link('catalog/filter', 'token=' . $this->session->data['token'], 'SSL');
+		$data['fraud'] = $this->url->link('extension/fraud', 'token=' . $this->session->data['token'], 'SSL');
 		$data['geo_zone'] = $this->url->link('localisation/geo_zone', 'token=' . $this->session->data['token'], 'SSL');
 		$data['information'] = $this->url->link('catalog/information', 'token=' . $this->session->data['token'], 'SSL');
 		$data['installer'] = $this->url->link('extension/installer', 'token=' . $this->session->data['token'], 'SSL');
@@ -181,10 +184,13 @@ class ControllerCommonMenu extends Controller {
 		$data['openbay_show_menu'] = $this->config->get('openbaypro_menu');
 		$data['openbay_link_extension'] = $this->url->link('extension/openbay', 'token=' . $this->session->data['token'], 'SSL');
 		$data['openbay_link_orders'] = $this->url->link('extension/openbay/orderlist', 'token=' . $this->session->data['token'], 'SSL');
-		$data['openbay_link_items'] = $this->url->link('extension/openbay/itemlist', 'token=' . $this->session->data['token'], 'SSL');
+		$data['openbay_link_items'] = $this->url->link('extension/openbay/items', 'token=' . $this->session->data['token'], 'SSL');
 		$data['openbay_link_ebay'] = $this->url->link('openbay/ebay', 'token=' . $this->session->data['token'], 'SSL');
 		$data['openbay_link_ebay_settings'] = $this->url->link('openbay/ebay/settings', 'token=' . $this->session->data['token'], 'SSL');
 		$data['openbay_link_ebay_links'] = $this->url->link('openbay/ebay/viewitemlinks', 'token=' . $this->session->data['token'], 'SSL');
+		$data['openbay_link_etsy'] = $this->url->link('openbay/etsy', 'token=' . $this->session->data['token'], 'SSL');
+		$data['openbay_link_etsy_settings'] = $this->url->link('openbay/etsy/settings', 'token=' . $this->session->data['token'], 'SSL');
+		$data['openbay_link_etsy_links'] = $this->url->link('openbay/etsy_product/links', 'token=' . $this->session->data['token'], 'SSL');
 		$data['openbay_link_ebay_orderimport'] = $this->url->link('openbay/ebay/vieworderimport', 'token=' . $this->session->data['token'], 'SSL');
 		$data['openbay_link_amazon'] = $this->url->link('openbay/amazon', 'token=' . $this->session->data['token'], 'SSL');
 		$data['openbay_link_amazon_settings'] = $this->url->link('openbay/amazon/settings', 'token=' . $this->session->data['token'], 'SSL');
@@ -192,19 +198,22 @@ class ControllerCommonMenu extends Controller {
 		$data['openbay_link_amazonus'] = $this->url->link('openbay/amazonus', 'token=' . $this->session->data['token'], 'SSL');
 		$data['openbay_link_amazonus_settings'] = $this->url->link('openbay/amazonus/settings', 'token=' . $this->session->data['token'], 'SSL');
 		$data['openbay_link_amazonus_links'] = $this->url->link('openbay/amazonus/itemlinks', 'token=' . $this->session->data['token'], 'SSL');
-		 
-      $data['manifest'] = $this->url->link('omnivalt/omnivalt', 'token=' . $this->session->data['token'], 'SSL');
-      $data['settings'] = $this->url->link('shipping/omnivalt', 'token=' . $this->session->data['token'], 'SSL');
-      $this->load->language('shipping/omnivalt');
-      $data['menu_manifest']   = $this->language->get('menu_manifest');
-      $data['menu_settings']   = $this->language->get('menu_settings');
-      $data['menu_head']   = $this->language->get('menu_head');
-      $data['openbay_markets'] = array(
+		$data['openbay_markets'] = array(
 			'ebay' => $this->config->get('ebay_status'),
-			'amazon' => $this->config->get('amazon_status'),
-			'amazonus' => $this->config->get('amazonus_status'),
+			'amazon' => $this->config->get('openbay_amazon_status'),
+			'amazonus' => $this->config->get('openbay_amazonus_status'),
+			'etsy' => $this->config->get('etsy_status'),
 		);
 
-		return $this->load->view('common/menu.tpl', $data);
+		
+        // Omniva
+        $data['omnivalt_manifest'] = $this->url->link('omnivalt/omnivalt', 'token=' . $this->session->data['token'], 'SSL');
+        $data['omnivalt_settings'] = $this->url->link('shipping/omnivalt', 'token=' . $this->session->data['token'], 'SSL');
+        $this->load->language('shipping/omnivalt');
+        $data['omnivalt_menu_manifest']   = $this->language->get('menu_manifest');
+        $data['omnivalt_menu_settings']   = $this->language->get('menu_settings');
+        $data['omnivalt_menu_head']   = $this->language->get('menu_head');
+        // Omniva End
+        return $this->load->view('common/menu.tpl', $data);
 	}
 }
