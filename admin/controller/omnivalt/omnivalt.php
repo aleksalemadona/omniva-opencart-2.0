@@ -29,8 +29,8 @@ class ControllerOmnivaltOmnivalt extends Controller
         $data['heading_title'] = $this->language->get('heading_title');
         
         $numRows = $this->db->query("SELECT COUNT(*) 
-                                        FROM ".DB_PREFIX."order A
-                                        LEFT JOIN ".DB_PREFIX."order_omniva B ON A.order_id = B.id_order
+                                        FROM `".DB_PREFIX."order` A
+                                        LEFT JOIN `".DB_PREFIX."order_omniva` B ON A.order_id = B.id_order
                                         WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.tracking IS NOT NULL AND B.manifest != $manifest AND B.manifest != -1
                                         ")->rows;
         $numRows = intval($numRows[0]["COUNT(*)"]);
@@ -58,8 +58,8 @@ class ControllerOmnivaltOmnivalt extends Controller
             "
             SELECT order_id, A.total, A.currency_value, A.currency_code, A.date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, 
             B.tracking, B.manifest, B.labels, B.id_order
-            FROM " . DB_PREFIX . "order A
-            LEFT JOIN " . DB_PREFIX . "order_omniva B ON A.order_id = B.id_order
+            FROM `" . DB_PREFIX . "order` A
+            LEFT JOIN `" . DB_PREFIX . "order_omniva` B ON A.order_id = B.id_order
             WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.tracking IS NOT NULL AND B.manifest != $manifest AND B.manifest != -1
             ORDER BY manifest DESC, order_id DESC
             LIMIT $start, $limit;
@@ -69,8 +69,8 @@ class ControllerOmnivaltOmnivalt extends Controller
             "
             SELECT order_id, A.total, A.currency_value, A.currency_code, A.date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, 
             B.tracking, B.manifest, B.labels, B.id_order
-            FROM " . DB_PREFIX . "order A
-            LEFT JOIN " . DB_PREFIX . "order_omniva B ON A.order_id = B.id_order
+            FROM `" . DB_PREFIX . "order` A
+            LEFT JOIN `" . DB_PREFIX . "order_omniva` B ON A.order_id = B.id_order
             WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND (B.tracking IS NULL OR B.manifest = $manifest)
             ORDER BY order_id DESC;
             "
@@ -80,8 +80,8 @@ class ControllerOmnivaltOmnivalt extends Controller
             "
             SELECT order_id, A.total, A.currency_value, A.currency_code, A.date_modified, labelscount, CONCAT(firstname, ' ', lastname) AS full_name, 
             B.tracking, B.manifest, B.labels, B.id_order
-            FROM " . DB_PREFIX . "order A
-            LEFT JOIN " . DB_PREFIX . "order_omniva B ON A.order_id = B.id_order
+            FROM `" . DB_PREFIX . "order` A
+            LEFT JOIN `" . DB_PREFIX . "order_omniva` B ON A.order_id = B.id_order
             WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' AND B.manifest = -1
             ORDER BY order_id DESC;
             "
@@ -191,8 +191,8 @@ class ControllerOmnivaltOmnivalt extends Controller
         $orders = $this->db->query("
         SELECT order_id, A.total, A.currency_value, A.currency_code, A.date_modified, CONCAT(firstname, ' ', lastname) AS full_name, 
         B.tracking, B.manifest, B.labels, B.id_order
-        FROM " . DB_PREFIX . "order A
-        LEFT JOIN " . DB_PREFIX . "order_omniva B ON A.order_id = B.id_order
+        FROM `" . DB_PREFIX . "order` A
+        LEFT JOIN `" . DB_PREFIX . "order_omniva` B ON A.order_id = B.id_order
         WHERE order_status_id != 0 AND shipping_code LIKE 'omnivalt%' " . $where . "
         ORDER BY manifest DESC, order_id DESC
         ;");
@@ -227,7 +227,7 @@ class ControllerOmnivaltOmnivalt extends Controller
         $id_order = $this->request->get['order_id'];
         $none = null;
         $manifest = -1;
-        $this->db->query("INSERT INTO ".DB_PREFIX."order_omniva (tracking, manifest, labels, id_order)
+        $this->db->query("INSERT INTO `".DB_PREFIX."order_omniva` (tracking, manifest, labels, id_order)
             VALUES ('$none','$manifest','$none','$id_order')");
         
      $this->response->redirect($this->url->link('omnivalt/omnivalt', 'token=' . $this->session->data['token'], true));
@@ -241,7 +241,7 @@ class ControllerOmnivaltOmnivalt extends Controller
 
         $id_order = $this->request->get['order_id'];
         $none = null;
-        $this->db->query("DELETE FROM ".DB_PREFIX."order_omniva WHERE id_order=".$id_order." AND manifest=-1;");
+        $this->db->query("DELETE FROM `".DB_PREFIX."order_omniva` WHERE id_order=".$id_order." AND manifest=-1;");
 
         
      $this->response->redirect($this->url->link('omnivalt/omnivalt', 'token=' . $this->session->data['token'], true));
