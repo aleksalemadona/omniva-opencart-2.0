@@ -7,7 +7,7 @@
     <file path="catalog/view/theme/*/template/common/header.tpl" error="log">
      <operation>
         <search><![CDATA[</head>]]></search>
-            <add position="ibefore"><![CDATA[   
+            <add position="before"><![CDATA[   
             <script>
                 var omniva_map_translation = <?= json_encode($omniva_map_translation); ?>;
             </script>
